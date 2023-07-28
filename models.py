@@ -14,7 +14,7 @@ class User(Base):
     email = Column(String, unique=True)
     password = Column(String)
     is_active = Column(Boolean, default=True)
-    role = Column(String)
+    role = Column(String, default="user")
     created_at = Column(DateTime, default=func.now())
 
 
@@ -33,6 +33,24 @@ class CreateUserRequest(BaseModel):
                 "role": "user"
             }
         }
+
+
+class LoginUserRequest(BaseModel):
+    email: str
+    password: str
+
+    class Config:
+        json_schema_extra = {
+            "example": {
+                "email": "johndoe@app.com",
+                "password": "JohnDoe1"
+            }
+        }
+
+
+class Token(BaseModel):
+    access_token: str
+    token_type: str
 
 
 class Todo(Base):
