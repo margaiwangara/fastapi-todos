@@ -18,7 +18,7 @@ SECRET_KEY = "e707e2c1ccf145fd2592d9bc321e2150d1436ecc42eec71351a489c374a602ec"
 ALGORITHM = "HS256"
 
 bcrypt_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
-oauth2_bearer = OAuth2PasswordBearer(tokenUrl="auth/token")
+oauth2_bearer = OAuth2PasswordBearer(tokenUrl="auth/login")
 
 
 def get_db():
