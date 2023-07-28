@@ -6,7 +6,10 @@ from sqlalchemy.orm import Session
 from starlette import status
 
 
-router = APIRouter()
+router = APIRouter(
+    prefix="/todos",
+    tags=["Todos"]
+)
 
 
 def get_db():
@@ -20,12 +23,12 @@ def get_db():
 DB_DEPENDENCY = Annotated[Session, Depends(get_db)]
 
 
-@router.get("/todos")
+@router.get("/")
 async def get_all_todos(db: DB_DEPENDENCY):
     return db.query(Todo).all()
 
 
-@router.get("/todos/{todo_id}", status_code=status.HTTP_200_OK)
+@router.get("/{todo_id}", status_code=status.HTTP_200_OK)
 async def get_single_todo(db: DB_DEPENDENCY, todo_id: int = Path(gt=0)):
     todo = db.query(Todo).filter(Todo.id == todo_id).first()
 
@@ -34,7 +37,7 @@ async def get_single_todo(db: DB_DEPENDENCY, todo_id: int = Path(gt=0)):
     raise HTTPException(404, "Todo not found")
 
 
-@router.post("/todos", status_code=status.HTTP_201_CREATED)
+@router.post("/", status_code=status.HTTP_201_CREATED)
 async def create_todo(todo: TodoRequest, db: DB_DEPENDENCY):
     todo_item = Todo(**todo.model_dump())
 
@@ -43,7 +46,7 @@ async def create_todo(todo: TodoRequest, db: DB_DEPENDENCY):
     return todo
 
 
-@router.put("/todos/{todo_id}", status_code=status.HTTP_204_NO_CONTENT)
+@router.put("/{todo_id}", status_code=status.HTTP_204_NO_CONTENT)
 async def update_todo(db: DB_DEPENDENCY, todo: TodoRequest, todo_id: int = Path(gt=0)):
     todo_item = db.query(Todo).filter(Todo.id == todo_id).first()
 
@@ -59,7 +62,7 @@ async def update_todo(db: DB_DEPENDENCY, todo: TodoRequest, todo_id: int = Path(
     db.commit()
 
 
-@router.delete("/todos/{todo_id}", status_code=status.HTTP_204_NO_CONTENT)
+@router.delete("/{todo_id}", status_code=status.HTTP_204_NO_CONTENT)
 async def delete_todo(db: DB_DEPENDENCY, todo_id: int = Path(gt=0)):
     todo_item = db.query(Todo).filter(Todo.id == todo_id).first();
 
