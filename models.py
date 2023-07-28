@@ -18,6 +18,23 @@ class User(Base):
     created_at = Column(DateTime, default=func.now())
 
 
+class CreateUserRequest(BaseModel):
+    name: str = Field(min_length=5, max_length=50)
+    email: str
+    password: str
+    role: str
+
+    class Config:
+        json_schema_extra = {
+            "example": {
+                "name": "John Doe",
+                "email": "johndoe@app.com",
+                "password": "JohnDoe1",
+                "role": "user"
+            }
+        }
+
+
 class Todo(Base):
     __tablename__ = "todos"
 
